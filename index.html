@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" data-app-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KODEX Live Runtime</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div>
+        <p class="eyebrow">Live Coding Runtime</p>
+        <h1>KODEX</h1>
+        <p class="lede">
+          Browser-native instrument for rhythm, synthesis, visuals, and input-driven performance.
+        </p>
+        <div class="sidebar-links" role="navigation" aria-label="Links">
+          <a class="icon-link" id="helpLink" href="./howto.html" target="_blank" rel="noopener noreferrer" title="How to write scripts" aria-label="How to write scripts (opens in new tab)">
+            <svg class="icon-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+          </a>
+          <a class="icon-link" id="githubLink" href="https://github.com/frangedev/kodex" target="_blank" rel="noopener noreferrer" title="KODEX on GitHub" aria-label="KODEX on GitHub (opens in new tab)">
+            <svg class="icon-svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </a>
+          <button type="button" class="icon-link icon-button" id="settingsOpen" title="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settingsDialog">
+            <svg class="icon-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <label for="exampleSelect">Examples</label>
+          <select id="exampleSelect"></select>
+          <button id="loadExample" type="button">Load Example</button>
+        </div>
+
+        <div class="card">
+          <p class="label">Transport</p>
+          <div class="button-row">
+            <button id="runButton" type="button">Run Script</button>
+            <button id="panicButton" type="button" class="ghost">Panic</button>
+          </div>
+          <button id="audioButton" type="button" class="ghost wide">Unlock Audio</button>
+          <label class="toggle">
+            <input id="autorunToggle" type="checkbox" checked>
+            <span>Autorun editor changes</span>
+          </label>
+          <p id="statusText" class="status">Idle</p>
+        </div>
+
+        <div class="card">
+          <p class="label">Notes</p>
+          <ul class="notes">
+            <li>Press any keyboard key to emit `key:*` events.</li>
+            <li>Click or move across the stage to feed `mouse` input.</li>
+            <li>Audio starts after a user gesture in most browsers.</li>
+            <li>Use `kick`, `snare`, `hat`, `clap`, `pad`, `pluck`, and `fx` in scripts.</li>
+            <li>Tools like `once`, `repeat`, `play`, and `chord` enable live scenes.</li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <section class="panel editor-panel">
+        <div class="panel-header editor-panel-header">
+          <div class="editor-panel-header-top">
+            <div>
+              <p class="eyebrow">Script</p>
+              <h2>Performance Patch</h2>
+            </div>
+            <p class="hint">Write code, run it, mutate it live.</p>
+          </div>
+          <div class="editor-toolbar" role="group" aria-label="Editor appearance">
+            <div class="toolbar-field">
+              <label for="editorThemeSelect">Editor theme</label>
+              <select id="editorThemeSelect"></select>
+            </div>
+            <div class="toolbar-field">
+              <label for="editorFxSelect">Background FX</label>
+              <select id="editorFxSelect"></select>
+            </div>
+          </div>
+        </div>
+        <div class="editor-chrome">
+          <div id="editorShell" class="editor-shell"></div>
+        </div>
+      </section>
+
+      <section class="panel stage-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Stage</p>
+            <h2>Reactive Canvas</h2>
+          </div>
+          <div class="meter-row">
+            <div class="meter">
+              <span>Tempo</span>
+              <strong id="tempoValue">120 BPM</strong>
+            </div>
+            <div class="meter">
+              <span>Last Event</span>
+              <strong id="eventValue">none</strong>
+            </div>
+            <div class="meter">
+              <span>Audio</span>
+              <strong id="audioStateValue">suspended</strong>
+            </div>
+          </div>
+        </div>
+        <div class="stage-wrap">
+          <canvas id="stage"></canvas>
+          <div class="overlay">
+            <div>
+              <p class="overlay-label">Now Running</p>
+              <strong id="scriptName">Custom Script</strong>
+            </div>
+            <div>
+              <p class="overlay-label">Toolset</p>
+              <strong id="toolsetValue">core</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle">
+    <div class="settings-inner">
+      <div class="settings-head">
+        <h2 id="settingsTitle">Settings</h2>
+        <button type="button" class="icon-button settings-close" id="settingsClose" aria-label="Close settings">×</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-field">
+          <label for="appThemeSelect">App theme</label>
+          <select id="appThemeSelect">
+            <option value="dark">Dark (default)</option>
+            <option value="light">Light</option>
+            <option value="ocean">Ocean night</option>
+          </select>
+        </div>
+        <div class="settings-field">
+          <label for="editorModeSelect">Script editor</label>
+          <select id="editorModeSelect">
+            <option value="pro">Pro — CodeMirror (autocomplete, themes)</option>
+            <option value="simple">Simple — plain textarea</option>
+          </select>
+        </div>
+        <p class="settings-hint">Editor colors and background FX apply in Pro mode. Simple mode still uses background FX on the script panel.</p>
+        <p class="settings-links"><a href="./howto.html" target="_blank" rel="noopener noreferrer">Open script reference (how-to) →</a></p>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

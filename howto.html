@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KODEX — How to write scripts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #061018;
+      --card: rgba(14, 32, 48, 0.92);
+      --line: rgba(120, 200, 255, 0.18);
+      --text: #f2fbff;
+      --muted: #96b0c4;
+      --accent: #6ef2d2;
+      --accent2: #76c6ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      background: radial-gradient(circle at 20% 0%, rgba(110, 242, 210, 0.12), transparent 40%),
+        linear-gradient(160deg, #02060a, #061018 50%, #051220);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { color: var(--accent2); }
+    header {
+      padding: 2rem 1.5rem 1rem;
+      max-width: 52rem;
+      margin: 0 auto;
+    }
+    h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 0.5rem; }
+    .lede { color: var(--muted); max-width: 42ch; margin: 0; }
+    nav.toc {
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: 0 1.5rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+    nav.toc a { text-decoration: none; border-bottom: 1px solid rgba(118, 198, 255, 0.35); }
+    main { max-width: 52rem; margin: 0 auto; padding: 0 1.5rem 3rem; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1.25rem 1.35rem;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin: 0 0 0.75rem;
+    }
+    h3 { font-size: 1rem; margin: 1rem 0 0.35rem; color: var(--accent2); }
+    code, pre {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 0.88rem;
+    }
+    pre {
+      margin: 0.5rem 0;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(3, 10, 16, 0.85);
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow-x: auto;
+    }
+    ul { margin: 0.35rem 0; padding-left: 1.2rem; color: var(--muted); }
+    .back { margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>KODEX script reference</h1>
+    <p class="lede">Patterns, instruments, visuals, and events you can use in the live runtime. Open <a href="./index.html">index.html</a> to perform.</p>
+  </header>
+  <nav class="toc" aria-label="On this page">
+    <a href="#tempo">Tempo</a>
+    <a href="#patterns">Patterns</a>
+    <a href="#drums">Drums</a>
+    <a href="#notes">Notes</a>
+    <a href="#chain">Chaining</a>
+    <a href="#visual">Visuals</a>
+    <a href="#fx">Master FX</a>
+    <a href="#events">Events</a>
+    <a href="#tools">Timing tools</a>
+    <a href="#synth">Synth helper</a>
+  </nav>
+  <main>
+    <section id="tempo">
+      <h2>Tempo</h2>
+      <p><code>tempo(120)</code> sets BPM between 40 and 240. Call once near the top of your script.</p>
+    </section>
+    <section id="patterns">
+      <h2>Pattern strings</h2>
+      <p>Drums use step patterns: <code>x</code> = hit, <code>.</code> = rest. Note lanes use note names and rhythm mini-language from the parser (braces for sequences, <code>*</code> repeats, <code>?</code> probability, and more).</p>
+      <pre>kick("x... x.x. ..x. x...")
+bass("{c2 eb2 g2 bb1}*2")</pre>
+    </section>
+    <section id="drums">
+      <h2>Drum lanes</h2>
+      <ul>
+        <li><code>kick(pattern)</code>, <code>snare(pattern)</code>, <code>hat(pattern)</code>, <code>clap(pattern)</code></li>
+        <li><code>drums(pattern)</code> — kicks by default; configure via chain options.</li>
+      </ul>
+    </section>
+    <section id="notes">
+      <h2>Melodic instruments</h2>
+      <ul>
+        <li><code>bass(pattern)</code> — low monophonic line.</li>
+        <li><code>lead(pattern)</code> — lead melody.</li>
+        <li><code>pad(pattern)</code> — sustained harmony.</li>
+        <li><code>pluck(pattern)</code> — short articulated notes.</li>
+      </ul>
+    </section>
+    <section id="chain">
+      <h2>Chaining (all instruments)</h2>
+      <p>Each call returns a chainable handle. Common methods:</p>
+      <ul>
+        <li><code>.wave("sine"|"square"|"saw"|"triangle")</code></li>
+        <li><code>.gain(n)</code>, <code>.attack(n)</code>, <code>.release(n)</code>, <code>.duration(n)</code>, <code>.detune(cents)</code></li>
+        <li><code>.delay(time)</code> — also pushes the master delay.</li>
+        <li><code>.chord(name)</code> — pads: chord quality.</li>
+        <li><code>.every(steps, fn)</code> — periodic option mutate (advanced).</li>
+      </ul>
+      <pre>lead("{c4 eb4 g4 bb4}*2")
+  .wave("sawtooth")
+  .delay(0.24)
+  .gain(0.1)</pre>
+    </section>
+    <section id="visual">
+      <h2>Visuals</h2>
+      <pre>visual("rings")
+  .react("kick")
+  .color("cyan")
+  .trails(0.92)
+  .energy(0.2)
+  .background("ocean")</pre>
+      <p>Modes include <code>rings</code>, <code>grid</code>, and <code>bars</code>. <code>.react()</code> binds a drum or custom event name so the canvas pulses when that voice fires.</p>
+    </section>
+    <section id="fx">
+      <h2>Master FX</h2>
+      <pre>fx("delay", 0.22)
+fx("feedback", 0.35)
+fx("wet", 0.18)
+fx("filter", 2400)
+fx("master", 0.95)</pre>
+    </section>
+    <section id="events">
+      <h2>Events &amp; input</h2>
+      <pre>on("space", () => burst("circle", 24))
+on("key:a", () => drums("x.x.x.x."))
+on("mouse", p => synth("spark").play(p.x))</pre>
+      <p>Keyboard keys emit <code>key:&lt;name&gt;</code>. Mouse moves and clicks feed <code>mouse</code> with a normalized point <code>p</code> (x/y between 0 and 1).</p>
+    </section>
+    <section id="tools">
+      <h2>Timing helpers</h2>
+      <ul>
+        <li><code>once(beats, callback)</code> — run once after N whole-note beats.</li>
+        <li><code>repeat(beats, callback)</code> — reschedule every N beats.</li>
+        <li><code>wait(beats)</code> — returns a Promise (use inside async logic).</li>
+        <li><code>play(note, { instrument, gain, … })</code> — one-shot note.</li>
+        <li><code>chord(root, { chord, gain })</code> — pad-style chord stab.</li>
+        <li><code>burst(shape, count)</code> — visual burst on the canvas.</li>
+        <li><code>stop()</code> — clears loops (runtime also clears on each run).</li>
+      </ul>
+    </section>
+    <section id="synth">
+      <h2>Synth shortcut</h2>
+      <pre>synth("spark").play(0.5, { gain: 0.08 })
+synth("drift").play("d5", { gain: 0.04, tone: 2200 })</pre>
+    </section>
+    <p class="back"><a href="./index.html">← Back to KODEX</a> · <a href="https://github.com/frangedev/kodex">GitHub</a></p>
+  </main>
+</body>
+</html>
